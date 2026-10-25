@@ -1,0 +1,247 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  /* ---- DARK THEME (default) ---- */
+  --bg: 5 8 22;
+  --bg2: 8 13 28;
+  --ink: 241 245 249;
+  --muted: 170 180 196;
+  --cyan: 34 211 238;
+  --sky: 56 189 248;
+  --indigo: 99 102 241;
+  --violet: 168 85 247;
+  --on-accent: 4 18 26;
+  --edge: rgba(148, 163, 184, 0.12);
+  --wash: rgba(255, 255, 255, 0.045);
+  --surface: rgba(15, 23, 42, 0.65);
+  --visual-bg: rgba(0, 0, 0, 0.22);
+  /* glow = neon halo in dark mode */
+  --glow-sm: 0 0 16px rgba(34, 211, 238, 0.15);
+  --glow: 0 0 24px rgba(34, 211, 238, 0.25);
+  --glow-lg: 0 0 32px rgba(34, 211, 238, 0.4);
+  /* background aurora (see components/background-fx.tsx) */
+  --orb1: 34 211 238; --orb1-a: 0.28;
+  --orb2: 99 102 241; --orb2-a: 0.30;
+  --orb3: 168 85 247; --orb3-a: 0.28;
+  --orb4: 56 189 248; --orb4-a: 0.18;
+  --scrim: 0.5;
+}
+.light {
+  color-scheme: light;
+  /* ---- LIGHT THEME: crisp paper, white cards, deep teal/blue accents ---- */
+  --bg: 245 247 251;
+  --bg2: 237 241 248;
+  --ink: 15 23 42;
+  --muted: 71 85 105;
+  --cyan: 14 116 144;
+  --sky: 3 105 161;
+  --indigo: 67 56 202;
+  --violet: 109 40 217;
+  --on-accent: 255 255 255;
+  --edge: rgba(15, 23, 42, 0.10);
+  --wash: rgba(255, 255, 255, 0.86);
+  --surface: rgba(255, 255, 255, 0.9);
+  --visual-bg: #0b1226;
+  /* glow = soft tinted elevation in light mode */
+  --glow-sm: 0 1px 2px rgba(15, 23, 42, 0.06), 0 6px 16px -8px rgba(14, 116, 144, 0.30);
+  --glow: 0 1px 2px rgba(15, 23, 42, 0.08), 0 10px 24px -10px rgba(14, 116, 144, 0.45);
+  --glow-lg: 0 2px 4px rgba(15, 23, 42, 0.08), 0 16px 32px -12px rgba(14, 116, 144, 0.55);
+  --orb1: 56 189 248; --orb1-a: 0.30;
+  --orb2: 129 140 248; --orb2-a: 0.26;
+  --orb3: 196 148 252; --orb3-a: 0.22;
+  --orb4: 94 234 212; --orb4-a: 0.20;
+  --scrim: 0.2;
+}
+
+/* In-page links (#research, #projects …) stop just below the sticky header */
+section[id]:not(#home) {
+  scroll-margin-top: 1.5rem;
+}
+
+/* Hairline divider fading in at the top of every section after the hero */
+main > section[id]:not(#home) {
+  position: relative;
+}
+main > section[id]:not(#home)::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: min(calc(100% - 3rem), 64rem);
+  height: 1px;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, transparent, rgb(var(--cyan) / 0.28), transparent);
+}
+
+/* Smooth cross-fade when the theme is switched (class set by ThemeToggle) */
+html.theme-anim,
+html.theme-anim *,
+html.theme-anim *::before,
+html.theme-anim *::after {
+  transition: background-color 0.35s ease, border-color 0.35s ease,
+    color 0.35s ease, fill 0.35s ease, stroke 0.35s ease !important;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+body {
+  @apply bg-bg text-ink;
+  font-feature-settings: "kern";
+}
+
+::selection {
+  background: rgb(var(--cyan) / 0.25);
+}
+
+/* Accessible keyboard focus: 2px cyan outline everywhere */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid rgb(var(--cyan));
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: rgb(var(--bg));
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #22d3ee55, #6366f155);
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #22d3ee88, #6366f188);
+}
+
+
+.eyebrow {
+  @apply font-mono text-xs tracking-wide text-cyan;
+}
+
+/* Cursor ring (components/custom-cursor.tsx). The system cursor stays
+   visible; this ring only decorates it. Only opacity/transform animate. */
+.cursor-ring {
+  width: 34px;
+  height: 34px;
+  border-radius: 9999px;
+  border: 1.5px solid rgb(var(--cyan) / 0.55);
+  background: rgb(var(--cyan) / 0.04);
+  transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.2s ease, background-color 0.18s ease, border-color 0.18s ease;
+}
+.cursor-ring[data-state="hot"] {
+  transform: scale(1.55);
+  background: rgb(var(--cyan) / 0.12);
+  border-color: rgb(var(--cyan) / 0.8);
+}
+.cursor-ring[data-state="text"] {
+  transform: scale(0.35);
+  background: rgb(var(--cyan) / 0.5);
+}
+.cursor-ring.cursor-press {
+  transform: scale(0.8);
+}
+.cursor-ring[data-state="hot"].cursor-press {
+  transform: scale(1.25);
+}
+
+/* Light mode: cards (bg-wash + rounded-lg/xl/2xl) become white tiles with a
+   soft layered shadow; small pills get just a hairline. :where() keeps the
+   specificity at one class, so hover:shadow-* utilities still win. */
+.light :where(.bg-wash):where(.rounded-lg, .rounded-xl, .rounded-2xl) {
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05),
+    0 14px 32px -18px rgba(15, 23, 42, 0.22);
+}
+.light :where(.bg-wash).rounded-full {
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.07);
+}
+.light ::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #0e749077, #4338ca77);
+}
+
+.glass {
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.light .glass {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.data-figure {
+  @apply font-mono tabular-nums;
+}
+
+/* Shine sweep for primary buttons: a light band sweeps across on hover */
+.shine {
+  position: relative;
+  overflow: hidden;
+}
+.shine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.35) 45%,
+    transparent 70%
+  );
+  transform: translateX(-120%);
+  transition: transform 0.7s ease;
+}
+.shine:hover::after {
+  transform: translateX(120%);
+}
+
+/* Extremely subtle grain overlay */
+.grain {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  opacity: 0.022;
+}
+.light .grain {
+  opacity: 0.018;
+}
+
+.tech-grid {
+  background-image: linear-gradient(
+      rgba(148, 163, 184, 0.05) 1px,
+      transparent 1px
+    ),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.05) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+.light .tech-grid {
+  background-image: linear-gradient(
+      rgba(15, 23, 42, 0.045) 1px,
+      transparent 1px
+    ),
+    linear-gradient(90deg, rgba(15, 23, 42, 0.045) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
